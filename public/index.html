@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Firebase Hosting</title>
+    <link rel="stylesheet" href="style.css">
+<body>
+  <div class="container">
+    <div class="heading">Sign In</div>
+    <form action="" class="form">
+      <input required="" class="input" type="email" name="email" id="myEmail" placeholder="E-mail">
+      <input required="" class="input" type="password" name="password" id="password" placeholder="Password">
+      <span class="forgot-password"><a href="#">Forgot Password ?</a></span>
+      <input class="login-button" type="submit" value="Sign In" id="email">
+      
+    </form>
+    <div class="social-account-container">
+        <span class="title">Or Sign in with</span>
+        <div class="social-accounts">
+          <button class="social-button google" id="goo">
+            <svg class="svg" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 488 512">
+              <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"></path>
+            </svg></button>
+          <button class="social-button apple" id="github">
+            <svg class="svg" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512">
+              <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"></path>
+            </svg>
+          </button>
+          <button class="social-button twitter" id="twi">
+            <svg class="svg" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+              <path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <p>Don't have an account? <a href="signup.html" style="color:  rgb(18, 177, 209);">SignUp</a> </p>
+  </div>
+  <div id="showMe"></div>
+
+
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+      import { getAuth, signInWithPopup, GithubAuthProvider,TwitterAuthProvider, sendSignInLinkToEmail,GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+    
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDPscqQd12Oi52Vn6o0MbTKbIkP4bvj08M",
+        authDomain: "twitter-auth-c72fd.firebaseapp.com",
+        projectId: "twitter-auth-c72fd",
+        storageBucket: "twitter-auth-c72fd.appspot.com",
+        messagingSenderId: "783194499377",
+        appId: "1:783194499377:web:cc2948b31e20ba356d2810"
+      };
+    
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const provider = new TwitterAuthProvider();
+      const auth = getAuth(app);
+      const gitProvider = new GithubAuthProvider();
+      const googleProvider = new GoogleAuthProvider();
+
+      let twitter = document.getElementById('twi')
+      twitter.addEventListener('click', () =>{
+        alert('yw')
+        signInWithPopup(auth, provider)
+        .then((love) =>{
+          const user = love.user
+          console.log(user);
+          showMe.innerHTML = `${user.displayName}`
+        })
+      })
+
+      let submitEmail=document.getElementById('email')
+      submitEmail.addEventListener('click',()=>{
+        let my=document.getElementById('myEmail');
+         let email = my.value;
+        console.log(email);
+        const actionCodeSettings = {
+  // URL you want to redirect back to. The domain (www.example.com) for this
+  // URL must be in the authorized domains list in the Firebase Console.
+  url: ' https://twitter-auth-c72fd.web.app',
+  // This must be true.
+  handleCodeInApp: true,
+  iOS: {
+    bundleId: 'com.example.ios'
+  },
+  android: {
+    packageName: 'com.example.android',
+    installApp: true,
+    minimumVersion: '12'
+  },
+  dynamicLinkDomain: 'https://twitter-auth-c72fd.web.app'
+};
+
+const auth = getAuth();
+sendSignInLinkToEmail(auth, email, actionCodeSettings)
+  .then(() => {
+    // The link was successfully sent. Inform the user.
+    // Save the email locally so you don't need to ask the user for it again
+    // if they open the link on the same device.
+    window.localStorage.setItem('emailForSignIn', email);
+    console.log('link sent successfully');
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(error);
+    // ...
+  });
+      })
+
+      let git = document.getElementById('github')
+      git.addEventListener("click",()=>{
+        signInWithPopup(auth,gitProvider)
+        .then((result)=>{
+          const user=result.user;
+          console.log(user);
+        })
+        .catch((error)=>{
+          console.log(error);
+        })
+      })
+
+      let google =document.getElementById('goo')
+      google.addEventListener("click",()=>{
+        alert('hey')
+        signInWithPopup(auth,googleProvider)
+        .then((smile)=>{
+          const user=smile.user;
+          console.log(user);
+        })
+        .catch((error)=>{
+          console.log(error)
+        })
+      })
+    </script>
+  </body>
+</html>
